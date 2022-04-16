@@ -3,9 +3,10 @@ from pyglet import clock
 from pyglet.gl import *
 from ants import Ants
 from pyglet.window import key, Window
+from backdrop import *
 
 
-class Game_Window(pyglet.window.Window):
+class Game_Window(Window):
     def __init__(self):
         super(Game_Window,self).__init__(1024,768, "Симулятор муравейника")
         self.opengl_init()
@@ -40,11 +41,14 @@ class Game_Window(pyglet.window.Window):
     def on_key_press(self, symbol, modifiers):
         if symbol == key.LCTRL:
             self.create_ant()
-
+        if symbol == key.RCTRL:
+            '''Just a test.'''
+            self.new_fb = Tile(x=400, y=400, scale = 10, batch=self.batch_01, group=self.layer_01)
+    
     def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
         if buttons == pyglet.window.mouse.LEFT:
             glTranslatef(-dx, -dy, 0)
 
 game_window = Game_Window()
-game_window.run()
 
+game_window.run()
