@@ -17,7 +17,7 @@ class Square(pyglet.sprite.Sprite):
         self.value = value
 
 class Map_Editor:
-    def __init__(self, wall_value=1, space_value=0):
+    def __init__(self, wall_value=0, space_value=1):
         self.wall_value = wall_value
         self.space_value = space_value
         self.map_list = []
@@ -41,7 +41,7 @@ class Map_Editor:
             temp = []
             for j in range(len(self.map_list[0])):
                 if self.map_list[i][j] not in (self.wall_value, self.space_value):
-                    raise ValueError("В файле разрешены только значения указанные при создании объекта редактора")
+                    raise ValueError("В файле разрешены только значения, указанные при создании объекта редактора.")
                 img = white if self.map_list[i][j] == self.space_value else black
                 value = self.space_value if self.map_list[i][j] == self.wall_value else self.wall_value
                 sprite = Square(x=j*self.cell_size, y=(len(self.map_list) - 1 - i)*self.cell_size, img=img, value=value, batch=batch)
@@ -56,7 +56,7 @@ class Map_Editor:
                 for square in row:
                     line.append(str(square.value))
                 print(', '.join(line), file=map_file)
-        print('Map saved successfully!')
+        print('Карта сохранена успешно!')
 
     def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
         if buttons == pyglet.window.mouse.MIDDLE:
@@ -85,7 +85,7 @@ def on_draw():
 
 
 if __name__ == '__main__':
-    map_editor = Map_Editor(wall_value=0, space_value=1) # сюда указывать значения для стены (черный) и пространства (белый)
+    map_editor = Map_Editor(wall_value=0, space_value=1) # сюда указывать значения для стены (черный) и пространства (белый) - 
     map_editor.edit('map.txt')
 
     pyglet.app.run()

@@ -16,7 +16,7 @@ class Game_Map():
         with open('map.txt', 'w') as file_map:
             for i in range(len(self.map_list)):
                 print(str(self.map_list[i])[1:-1], file=file_map)
-        print('New file generated successfully.')
+        print('Новый файл успешно сгенерирован.')
 
     def load_file(self):
         with open('map.txt', 'r') as file_map:
@@ -28,7 +28,7 @@ class Game_Map():
         self.load_file()
         for i in range(len(self.map_list)):
             for j in range(len(self.map_list[i])):
-                raise NotImplementedError("fill() is not imlemented yet.")
+                raise NotImplementedError("fill() в процессе.")
 
 class Tile(shapes.Rectangle):
     def __init__(self, x, y, scale:int, batch=None, group=None):
