@@ -17,12 +17,13 @@ class Square(pyglet.sprite.Sprite):
         self.value = value
 
 class Map_Editor:
-    def __init__(self):
-        
+    def __init__(self, wall_value=1, space_value=0):
+        self.wall_value = wall_value
+        self.space_value = space_value
         self.map_list = []
         self.scale = 2
         self.cell_size = 5 * self.scale
-        self.colors = {white: 0, black: 10}
+        self.colors = {white: self.space_value, black: self.wall_value}
         
         self.offset_x = 0
         self.offset_y = 0
@@ -39,8 +40,10 @@ class Map_Editor:
         for i in range(len(self.map_list)):
             temp = []
             for j in range(len(self.map_list[0])):
+                if self.map_list[i][j] not in (self.wall_value, self.space_value):
+                    raise ValueError("В файле разрешены только значения указанные при создании объекта редактора")
                 img = white if self.map_list[i][j] else black
-                value = 10 if self.map_list[i][j] else 0
+                value = self.space_value if self.map_list[i][j] else self.wall_value
                 sprite = Square(x=j*self.cell_size, y=(len(self.map_list) - 1 - i)*self.cell_size, img=img, value=value, batch=batch)
                 sprite.scale = self.scale
                 temp.append(sprite)
@@ -63,11 +66,11 @@ class Map_Editor:
         elif buttons & pyglet.window.mouse.LEFT and 0 <= x - self.offset_x < len(self.map_list[0]) * self.cell_size and 0 <= y - self.offset_y < (len(self.map_list)) * self.cell_size:
             square = self.squares[(len(self.map_list) * self.cell_size - y + self.offset_y - 1) // self.cell_size][(x - self.offset_x) // self.cell_size]
             square.image = black
-            square.value = 0
+            square.value = self.wall_value
         elif buttons & pyglet.window.mouse.RIGHT and 0 <= x - self.offset_x < len(self.map_list[0]) * self.cell_size and 0 <= y + self.offset_y < len(self.map_list) * self.cell_size:
             square = self.squares[(len(self.map_list) * self.cell_size - y + self.offset_y - 1) // self.cell_size][(x - self.offset_x) // self.cell_size]
             square.image = white
-            square.value = 10
+            square.value = self.space_value
 
 
     def on_key_press(self, symbol, modifiers):
@@ -82,7 +85,7 @@ def on_draw():
 
 
 if __name__ == '__main__':
-    map_editor = Map_Editor()
+    map_editor = Map_Editor(wall_value=0, space_value=1) # сюда указывать значения для стены (черный) и пространства (белый)
     map_editor.edit('map.txt')
 
     pyglet.app.run()
