@@ -33,7 +33,6 @@ class Map_Editor:
         with open(self.file_path, 'r') as map_file:
             for line in map_file:
                 row = line.strip().split(', ')
-                print(row)
                 self.map_list.append(list(map(int, row)))
 
         self.squares = []
@@ -62,12 +61,11 @@ class Map_Editor:
             self.offset_y += dy
             pyglet.gl.glTranslatef(dx, dy, 0)
         elif buttons & pyglet.window.mouse.LEFT and 0 <= x - self.offset_x < len(self.map_list[0]) * self.cell_size and 0 <= y - self.offset_y < (len(self.map_list)) * self.cell_size:
-            square = self.squares[(len(self.map_list) * self.cell_size - y - self.offset_y - 1) // self.cell_size][(x - self.offset_x) // self.cell_size]
+            square = self.squares[(len(self.map_list) * self.cell_size - y + self.offset_y - 1) // self.cell_size][(x - self.offset_x) // self.cell_size]
             square.image = black
             square.value = 0
-            print((len(self.map_list) * self.cell_size - y - self.offset_y), (len(self.map_list) * self.cell_size - y - self.offset_y)//self.cell_size)
         elif buttons & pyglet.window.mouse.RIGHT and 0 <= x - self.offset_x < len(self.map_list[0]) * self.cell_size and 0 <= y + self.offset_y < len(self.map_list) * self.cell_size:
-            square = self.squares[(len(self.map_list) * self.cell_size - y - self.offset_y - 1) // self.cell_size][(x - self.offset_x) // self.cell_size]
+            square = self.squares[(len(self.map_list) * self.cell_size - y + self.offset_y - 1) // self.cell_size][(x - self.offset_x) // self.cell_size]
             square.image = white
             square.value = 10
 
