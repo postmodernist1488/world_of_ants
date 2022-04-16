@@ -40,7 +40,7 @@ class Map_Editor:
             temp = []
             for j in range(len(self.map_list[0])):
                 img = white if self.map_list[i][j] else black
-                value = 10 if self.map_list[i][j] else black
+                value = 10 if self.map_list[i][j] else 0
                 sprite = Square(x=j*self.cell_size, y=i*self.cell_size, img=img, value=value, batch=batch)
                 sprite.scale = self.scale
                 temp.append(sprite)
@@ -48,7 +48,7 @@ class Map_Editor:
 
     def save(self):
         with open(self.file_path, 'w') as map_file:
-            for row in self.squares:
+            for row in reversed(self.squares):
                 line = []
                 for square in row:
                     line.append(str(square.value))
@@ -56,7 +56,7 @@ class Map_Editor:
         print('Map saved successfully!')
 
     def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
-        if modifiers == pyglet.window.key.MOD_CTRL:
+        if buttons == pyglet.window.mouse.MIDDLE:
             self.offset_x += dx
             self.offset_y += dy
             pyglet.gl.glTranslatef(dx, dy, 0)
@@ -71,7 +71,7 @@ class Map_Editor:
             square.value = 10
 
     def on_key_press(self, symbol, modifiers):
-        if symbol == pyglet.window.key.S and modifiers == pyglet.window.key.MOD_CTRL:
+        if symbol == pyglet.window.key.S:
             self.save()
 
 

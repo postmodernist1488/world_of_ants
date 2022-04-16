@@ -5,8 +5,8 @@
 
 class Game_Map():
     def __init__(self):
-        self.count_x = 20
-        self.count_y = 20
+        self.count_x = 50
+        self.count_y = 50
         self.map_list = []
 
     def new_file(self):
