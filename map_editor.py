@@ -42,8 +42,8 @@ class Map_Editor:
             for j in range(len(self.map_list[0])):
                 if self.map_list[i][j] not in (self.wall_value, self.space_value):
                     raise ValueError("В файле разрешены только значения указанные при создании объекта редактора")
-                img = white if self.map_list[i][j] else black
-                value = self.space_value if self.map_list[i][j] else self.wall_value
+                img = white if self.map_list[i][j] == self.space_value else black
+                value = self.space_value if self.map_list[i][j] == self.wall_value else self.wall_value
                 sprite = Square(x=j*self.cell_size, y=(len(self.map_list) - 1 - i)*self.cell_size, img=img, value=value, batch=batch)
                 sprite.scale = self.scale
                 temp.append(sprite)
