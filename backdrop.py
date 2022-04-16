@@ -7,8 +7,8 @@ from pyglet import shapes
 
 class Game_Map():
     def __init__(self):
-        self.count_x = 200
-        self.count_y = 100
+        self.count_x = 50
+        self.count_y = 50
         self.map_list = []
 
     def new_file(self):
@@ -16,6 +16,7 @@ class Game_Map():
         with open('map.txt', 'w') as file_map:
             for i in range(len(self.map_list)):
                 print(str(self.map_list[i])[1:-1], file=file_map)
+        print('New file generated successfully.')
 
     def load_file(self):
         with open('map.txt', 'r') as file_map:
@@ -27,7 +28,7 @@ class Game_Map():
         self.load_file()
         for i in range(len(self.map_list)):
             for j in range(len(self.map_list[i])):
-                print(i, j)
+                raise NotImplementedError("fill() is not imlemented yet.")
 
 class Tile(shapes.Rectangle):
     def __init__(self, x, y, scale:int, batch=None, group=None):
@@ -37,4 +38,4 @@ class Tile(shapes.Rectangle):
 
 if __name__ == '__main__':
     obj = Game_Map()
-    obj.fill()
+    obj.new_file()

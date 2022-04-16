@@ -33,6 +33,7 @@ class Map_Editor:
         with open(self.file_path, 'r') as map_file:
             for line in map_file:
                 row = line.strip().split(', ')
+                print(row)
                 self.map_list.append(list(map(int, row)))
 
         self.squares = []
@@ -41,14 +42,14 @@ class Map_Editor:
             for j in range(len(self.map_list[0])):
                 img = white if self.map_list[i][j] else black
                 value = 10 if self.map_list[i][j] else 0
-                sprite = Square(x=j*self.cell_size, y=i*self.cell_size, img=img, value=value, batch=batch)
+                sprite = Square(x=j*self.cell_size, y=(len(self.map_list) - 1 - i)*self.cell_size, img=img, value=value, batch=batch)
                 sprite.scale = self.scale
                 temp.append(sprite)
             self.squares.append(temp)
 
     def save(self):
         with open(self.file_path, 'w') as map_file:
-            for row in reversed(self.squares):
+            for row in self.squares:
                 line = []
                 for square in row:
                     line.append(str(square.value))
@@ -61,14 +62,15 @@ class Map_Editor:
             self.offset_y += dy
             pyglet.gl.glTranslatef(dx, dy, 0)
         elif buttons & pyglet.window.mouse.LEFT and 0 <= x - self.offset_x < len(self.map_list[0]) * self.cell_size and 0 <= y - self.offset_y < (len(self.map_list)) * self.cell_size:
-            square = self.squares[(y - self.offset_y) // self.cell_size][(x - self.offset_x) // self.cell_size]
+            square = self.squares[(len(self.map_list) * self.cell_size - y - self.offset_y - 1) // self.cell_size][(x - self.offset_x) // self.cell_size]
             square.image = black
             square.value = 0
-
+            print((len(self.map_list) * self.cell_size - y - self.offset_y), (len(self.map_list) * self.cell_size - y - self.offset_y)//self.cell_size)
         elif buttons & pyglet.window.mouse.RIGHT and 0 <= x - self.offset_x < len(self.map_list[0]) * self.cell_size and 0 <= y + self.offset_y < len(self.map_list) * self.cell_size:
-            square = self.squares[(y - self.offset_y) // self.cell_size][(x - self.offset_x) // self.cell_size]
+            square = self.squares[(len(self.map_list) * self.cell_size - y - self.offset_y - 1) // self.cell_size][(x - self.offset_x) // self.cell_size]
             square.image = white
             square.value = 10
+
 
     def on_key_press(self, symbol, modifiers):
         if symbol == pyglet.window.key.S:
@@ -79,9 +81,6 @@ class Map_Editor:
 def on_draw():
     editor_window.clear()
     batch.draw()
-
-
-
 
 
 if __name__ == '__main__':
