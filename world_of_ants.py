@@ -15,7 +15,7 @@ class Game_Window(Window):
         self.alive = 1
 
     def opengl_init(self):
-        glClearColor(255.0/255.0, 255.0/255.0, 255.0/255.0, 1) # цвет окна
+        glClearColor(0.0/255.0, 128.0/255.0, 0.0/255.0, 1) # цвет окна
         glEnable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
         glDepthFunc(GL_LEQUAL)
@@ -43,8 +43,9 @@ class Game_Window(Window):
             self.create_ant()
         if symbol == key.RCTRL:
             '''Just a test.'''
-            self.new_fb = Tile(x=400, y=400, scale = 10, batch=self.batch_01, group=self.layer_01)
-    
+            self.game_map = Game_Map(20, batch=self.batch_01, group=self.layer_01)
+            self.game_map.fill()
+
     def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
         if buttons == pyglet.window.mouse.LEFT:
             glTranslatef(-dx, -dy, 0)

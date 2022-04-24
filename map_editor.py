@@ -2,7 +2,7 @@ import pyglet
 
 editor_window = pyglet.window.Window(1280, 720)
 batch = pyglet.graphics.Batch()
-grid = 1
+grid = 0
 
 if grid:
     white = pyglet.image.load('images/white_grid.png')
