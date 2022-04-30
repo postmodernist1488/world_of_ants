@@ -6,7 +6,12 @@ import random
 from math import cos, sin, radians
 
 class Ants(pyglet.sprite.Sprite):
-    def __init__(self, x = 30 , y= 30, batch = None, group = None):
+    def __init__(self, gm_x:int, gm_y:int, gm_scale:int, game_map=None, batch = None, group = None):
+        self.gm_x = gm_x
+        self.gm_y = gm_y
+        self.game_map = game_map
+        self.gm_scale = gm_scale
+        
         image_frames_ant = ('images/ant_ani_01.png', 'images/ant_ani_03.png','images/ant_ani_02.png','images/ant_ani_03.png')
         images_ant = []
         for i in image_frames_ant:
@@ -16,7 +21,7 @@ class Ants(pyglet.sprite.Sprite):
             images_ant.append(img)        
         animation_ant = pyglet.image.Animation.from_image_sequence(images_ant, 0.2, True)
 
-        super(Ants, self).__init__(animation_ant, x = x, y= y, batch = batch, group= group)
+        super(Ants, self).__init__(animation_ant, x = gm_x * gm_scale + gm_scale / 2, y=gm_y * gm_scale + gm_scale / 2, batch = batch, group= group)
         self.on_create = EventHook()
         self.on_destroy = EventHook()
         self.deque_move()
@@ -27,7 +32,14 @@ class Ants(pyglet.sprite.Sprite):
         #########
         self.dist = 0 #целевое количество шагов
         self.step = 0 #текущий шаг
-
+        self.next_step = {0: (0, 1), 
+                         45: (1, 1), 
+                         90: (1, 0),
+                         135: (1, -1),
+                         180: (0, -1),
+                         225: (-1, -1),
+                         270: (-1, 0),
+                         315: (-1, 1)}
 
     def create(self):
         self.on_create.fire()

@@ -1,6 +1,6 @@
 #400x200 (каждая координата 5*5) => 2000x1000 пикселей
 #Муравьи ходят кратно квадратам карты
-#10 - закрыто
+#0 - закрыто
 #закрытые - изображение препятствия
 
 from pyglet import shapes
@@ -15,8 +15,8 @@ class Game_Map():
         self.batch = batch
         self.group = group
 
-    def new_file(self):
-        self.map_list = [[10] * self.count_x for _ in range(self.count_y)]
+    def new_file(self, fill=0):
+        self.map_list = [[fill] * self.count_x for _ in range(self.count_y)]
         with open('map.txt', 'w') as file_map:
             for i in range(len(self.map_list)):
                 print(str(self.map_list[i])[1:-1], file=file_map)
@@ -44,5 +44,5 @@ class Tile(shapes.Rectangle):
 
 
 if __name__ == '__main__':
-    obj = Game_Map()
-    #obj.new_file()
+    obj = Game_Map(5)
+    obj.new_file(0)

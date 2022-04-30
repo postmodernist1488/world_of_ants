@@ -11,8 +11,11 @@ class Game_Window(Window):
         super(Game_Window,self).__init__(1024,768, "Симулятор муравейника")
         self.opengl_init()
         self.batch_01 = pyglet.graphics.Batch()
+        self.layer_00 = pyglet.graphics.OrderedGroup(0)
         self.layer_01 = pyglet.graphics.OrderedGroup(1)
         self.alive = 1
+        self.gm_scale = 20
+        self.create_backdrop()
 
     def opengl_init(self):
         glClearColor(0.0/255.0, 128.0/255.0, 0.0/255.0, 1) # цвет окна
@@ -41,10 +44,10 @@ class Game_Window(Window):
     def on_key_press(self, symbol, modifiers):
         if symbol == key.LCTRL:
             self.create_ant()
-        if symbol == key.RCTRL:
-            '''Just a test.'''
-            self.game_map = Game_Map(20, batch=self.batch_01, group=self.layer_01)
-            self.game_map.fill()
+
+    def create_backdrop(self):
+        self.game_map = Game_Map(self.gm_scale, batch=self.batch_01, group=self.layer_00)
+        self.game_map.fill()
 
     def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
         if buttons == pyglet.window.mouse.LEFT:
