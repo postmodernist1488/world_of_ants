@@ -12,6 +12,7 @@ class Game_Window(Window):
         super(Game_Window,self).__init__(1024,768, "Симулятор муравейника")
         self.opengl_init()
         self.batch_01 = pyglet.graphics.Batch()
+        self.layer_00 = pyglet.graphics.OrderedGroup(0)
         self.layer_01 = pyglet.graphics.OrderedGroup(1)
         self.layer_02 = pyglet.graphics.OrderedGroup(2)
         self.alive = 1

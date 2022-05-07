@@ -13,7 +13,6 @@ class Ants(pyglet.sprite.Sprite):
         self.gm_y = gm_y
         self.game_map = game_map
         self.gm_scale = gm_scale
-
         image_frames_ant = ('images/ant_ani_01.png', 'images/ant_ani_03.png','images/ant_ani_02.png','images/ant_ani_03.png')
         images_ant = []
         for i in image_frames_ant:
