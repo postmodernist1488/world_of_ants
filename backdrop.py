@@ -28,7 +28,7 @@ class Game_Map():
                 row = line.rstrip('\n').split(', ')
                 self.map_list.append(list(map(int, row)))
         self.map_list = list(reversed(self.map_list))
-        
+
     def fill(self):
         self.load_file()
         for i in range(len(self.map_list)):
@@ -40,7 +40,7 @@ class Game_Map():
 class Tile(shapes.Rectangle):
     def __init__(self, x:int, y:int, scale:int, batch=None, group=None):
         super().__init__(x=x, y=y, width=scale, height=scale, color=(0, 0, 0), batch=batch, group=group)
-        
+    
 
 
 if __name__ == '__main__':

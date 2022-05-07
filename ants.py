@@ -3,10 +3,17 @@ from event import EventHook
 from collections import deque
 from pyglet import clock
 import random
-from math import cos, sin, radians
+import math
+
+SQRT_2 = 1.41421356237
 
 class Ants(pyglet.sprite.Sprite):
-    def __init__(self, x = 30 , y= 30, batch = None, group = None):
+    def __init__(self, gm_x: int , gm_y: int, gm_scale: int, batch = None, group = None, game_map = None):
+        self.gm_x = gm_x
+        self.gm_y = gm_y
+        self.game_map = game_map
+        self.gm_scale = gm_scale
+
         image_frames_ant = ('images/ant_ani_01.png', 'images/ant_ani_03.png','images/ant_ani_02.png','images/ant_ani_03.png')
         images_ant = []
         for i in image_frames_ant:
@@ -16,51 +23,77 @@ class Ants(pyglet.sprite.Sprite):
             images_ant.append(img)        
         animation_ant = pyglet.image.Animation.from_image_sequence(images_ant, 0.2, True)
 
-        super(Ants, self).__init__(animation_ant, x = x, y= y, batch = batch, group= group)
+        super(Ants, self).__init__(animation_ant, x = gm_x*gm_scale+gm_scale/2, y=gm_y*gm_scale +gm_scale/2, batch = batch, group= group)
+
         self.on_create = EventHook()
         self.on_destroy = EventHook()
         self.deque_move()
-        self.rotation = 0 #начальный угол
-        self.direction_move = 0 #
-        self.target_d = 0 #целевой угол поворота
-        self.cw = 1 #направление по часовой/против часовой стрелки
-        #########
-        self.dist = 0 #целевое количество шагов
-        self.step = 0 #текущий шаг
 
+        self.rotation = 0 # начальное расположение (угол)
+        self.direction_move = 0 # на сколько градусов хочу повернуть
+        self.target_d = 0 # целевой угол поворота (0 сверху)
+        self.cw = 1 # направление поворота
+
+        self.dist = 0 # целевое количество шагов
+        self.step = 0 # текущий шаг
+        self.next_step = { 0:(0, 1), 45:(1, 1), 90:(1, 0), 135:(1, -1), 180:(0, -1), 225:(-1, -1), 270:(-1, 0), 315:(-1,1)  }
 
     def create(self):
         self.on_create.fire()
-        clock.schedule_interval(self.move_ant, 1/60)
+        clock.schedule_interval(self.move_ant, 1/60)       
 
     def move_ant(self, dt):
         self.q_state[0]()
-        
 
     def deque_move(self):
-        self.q_state = deque([self.prepare_ant, self.rotate_ant, self.step_ant])
-        
+        self.q_state = deque()
+        self.q_state.append(self.prepare_ant)
+        self.q_state.append(self.rotate_ant)
+        self.q_state.append(self.step_ant)
+
     def prepare_ant(self):
         self.direction_move = random.randrange(0, 181, 45)
-        self.cw = random.choice([-1, 1])
+        self.cw = random.choice([-1, 1]) # против / по часовой стрелке
         self.target_d = (self.rotation + self.direction_move * self.cw) % 360
-        self.q_state.rotate(-1)
-        self.step = 0
-        self.dist = random.randrange(10, 51, 10)
 
+        self.step = 0 
+        #self.dist = random.randrange(10, 51, 10)
+        self.dist = self.gm_scale
+
+        #получить адрес следующей игровой клетки
+        self.gm_x_next = self.gm_x + self.next_step[self.target_d][0]
+        self.gm_y_next = self.gm_y + self.next_step[self.target_d][1] 
+
+        if self.game_map.map_list[self.gm_y_next][self.gm_x_next] == 0:
+            self.q_state.rotate(-1)
 
     def rotate_ant(self):
-        if (self.rotation) % 360 != self.target_d:
-            self.rotation = (self.rotation + 5 * self.cw) % 360
+        if (self.rotation)% 360 !=  self.target_d:
+            self.rotation = (self.rotation + 5 * self.cw ) % 360
         else:
             self.q_state.rotate(-1)
 
     def step_ant(self):
-        if self.step < self.dist:
-            rad = radians(90 - self.rotation)
-            self.x += cos(rad)
-            self.y += sin(rad)
-            self.step += 1    
+        if self.step <= self.dist:
+            self.step += 1
+            rad = math.radians((360 + 90 - self.rotation) % 360)
+            if self.rotation % 90 == 0:
+                self.x += math.cos(rad)
+                self.y += math.sin(rad)
+            else:
+                self.x += math.cos(rad) * SQRT_2
+                self.y += math.sin(rad) * SQRT_2
+
         else:
+            self.gm_x = self.gm_x_next
+            self.gm_y = self.gm_y_next
             self.q_state.rotate(-1)
 
+    def destroy(self):                     
+            clock.unschedule(self.move_ant) #Отмена таймера
+            self.batch = None #Исключаем из пачки
+            self.on_destroy.fire()
+            self.delete() #суицид  
+
+    def __del__(self):
+        print('Ant destroyed') #проверка смерти

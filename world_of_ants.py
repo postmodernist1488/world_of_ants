@@ -6,13 +6,18 @@ from pyglet.window import key, Window
 from backdrop import *
 
 
+
 class Game_Window(Window):
     def __init__(self):
         super(Game_Window,self).__init__(1024,768, "Симулятор муравейника")
         self.opengl_init()
         self.batch_01 = pyglet.graphics.Batch()
         self.layer_01 = pyglet.graphics.OrderedGroup(1)
+        self.layer_02 = pyglet.graphics.OrderedGroup(2)
         self.alive = 1
+        self.game_map = Game_Map(20, batch=self.batch_01, group=self.layer_01)
+        self.game_map.fill()
+        self.gm_scale = 20
 
     def opengl_init(self):
         glClearColor(0.0/255.0, 128.0/255.0, 0.0/255.0, 1) # цвет окна
@@ -35,20 +40,18 @@ class Game_Window(Window):
             event = self.dispatch_events() # опрашиваем события 
     
     def create_ant(self):
-        new_ant = Ants(x=500, y=500, batch= self.batch_01, group= self.layer_01)
+        new_ant = Ants(gm_x=10, gm_y=10, gm_scale=self.gm_scale, batch= self.batch_01, group=self.layer_02, game_map=self.game_map)
         new_ant.create()
 
     def on_key_press(self, symbol, modifiers):
         if symbol == key.LCTRL:
             self.create_ant()
-        if symbol == key.RCTRL:
-            '''Just a test.'''
-            self.game_map = Game_Map(20, batch=self.batch_01, group=self.layer_01)
-            self.game_map.fill()
 
     def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
         if buttons == pyglet.window.mouse.LEFT:
             glTranslatef(-dx, -dy, 0)
+
+
 
 game_window = Game_Window()
 
