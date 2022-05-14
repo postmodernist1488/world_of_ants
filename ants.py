@@ -64,6 +64,8 @@ class Ants(pyglet.sprite.Sprite):
         self.gm_y_next = self.gm_y + self.next_step[self.target_d][1] 
 
         if self.game_map.map_list[self.gm_y_next][self.gm_x_next] == 0:
+            self.x_dest = self.gm_x_next * self.gm_scale + self.gm_scale/2
+            self.y_dest = self.gm_y_next * self.gm_scale + self.gm_scale/2
             self.q_state.rotate(-1)
 
     def rotate_ant(self):
@@ -73,7 +75,7 @@ class Ants(pyglet.sprite.Sprite):
             self.q_state.rotate(-1)
 
     def step_ant(self):
-        if self.step <= self.dist:
+        if self.step < self.dist:
             self.step += 1
             rad = math.radians((360 + 90 - self.rotation) % 360)
             if self.rotation % 90 == 0:
@@ -84,8 +86,13 @@ class Ants(pyglet.sprite.Sprite):
                 self.y += math.sin(rad) * SQRT_2
 
         else:
+            print(self.x, self.y)
+            self.x = self.x_dest
+            self.y = self.y_dest
+            print(self.x, self.y)
             self.gm_x = self.gm_x_next
             self.gm_y = self.gm_y_next
+
             self.q_state.rotate(-1)
 
     def destroy(self):                     

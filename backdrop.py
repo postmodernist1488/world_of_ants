@@ -38,9 +38,10 @@ class Game_Map():
                     self.tile_list.append(fb)
 
 class Tile(shapes.Rectangle):
-    def __init__(self, x:int, y:int, scale:int, batch=None, group=None):
+    def __init__(self, x:int, y:int, scale:int, track_type:int, batch=None, group=None):
         super().__init__(x=x, y=y, width=scale, height=scale, color=(0, 0, 0), batch=batch, group=group)
-    
+        self.track_type = track_type
+        self.track_power = 4
 
 
 if __name__ == '__main__':
