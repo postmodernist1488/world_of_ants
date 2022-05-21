@@ -16,7 +16,7 @@ class Game_Window(Window):
         self.layer_01 = pyglet.graphics.OrderedGroup(1)
         self.layer_02 = pyglet.graphics.OrderedGroup(2)
         self.alive = 1
-        self.gm_scale = 20
+        self.gm_scale = 10
         self.game_map = Game_Map(self.gm_scale, batch=self.batch_01, group=self.layer_01)
         self.game_map.fill()
         

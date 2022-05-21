@@ -67,7 +67,7 @@ class Map_Editor:
             square = self.squares[(len(self.map_list) * self.cell_size - y + self.offset_y - 1) // self.cell_size][(x - self.offset_x) // self.cell_size]
             square.image = black
             square.value = self.wall_value
-        elif buttons & pyglet.window.mouse.RIGHT and 0 <= x - self.offset_x < len(self.map_list[0]) * self.cell_size and 0 <= y + self.offset_y < len(self.map_list) * self.cell_size:
+        elif buttons & pyglet.window.mouse.RIGHT and 0 <= x - self.offset_x < len(self.map_list[0]) * self.cell_size and 0 <= y - self.offset_y < len(self.map_list) * self.cell_size:
             square = self.squares[(len(self.map_list) * self.cell_size - y + self.offset_y - 1) // self.cell_size][(x - self.offset_x) // self.cell_size]
             square.image = white
             square.value = self.space_value

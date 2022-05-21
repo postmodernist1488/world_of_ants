@@ -7,8 +7,8 @@ from pyglet import shapes
 
 class Game_Map():
     def __init__(self, scale:int=20, batch=None, group=None):
-        self.count_x = 70
-        self.count_y = 40
+        self.count_x = 140
+        self.count_y = 80
         self.map_list = []
         self.tile_list = []
         self.scale = scale
@@ -61,4 +61,5 @@ class Tile(shapes.Rectangle):
 
 
 if __name__ == '__main__':
+    #create empty map
     Game_Map().new_file(0)
