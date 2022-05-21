@@ -8,11 +8,11 @@ import math
 SQRT_2 = 1.41421356237
 
 class Ants(pyglet.sprite.Sprite):
-    def __init__(self, gm_x: int , gm_y: int, gm_scale: int, batch = None, group = None, game_map = None):
+    def __init__(self, gm_x: int , gm_y: int, batch = None, group = None, game_map = None):
         self.gm_x = gm_x
         self.gm_y = gm_y
         self.game_map = game_map
-        self.gm_scale = gm_scale
+        self.gm_scale = game_map.scale
         image_frames_ant = ('images/ant_ani_01.png', 'images/ant_ani_03.png','images/ant_ani_02.png','images/ant_ani_03.png')
         images_ant = []
         for i in image_frames_ant:
@@ -22,8 +22,8 @@ class Ants(pyglet.sprite.Sprite):
             images_ant.append(img)        
         animation_ant = pyglet.image.Animation.from_image_sequence(images_ant, 0.2, True)
 
-        super(Ants, self).__init__(animation_ant, x = gm_x*gm_scale+gm_scale/2, y=gm_y*gm_scale +gm_scale/2, batch = batch, group= group)
-
+        super(Ants, self).__init__(animation_ant, x = gm_x*self.gm_scale+self.gm_scale/2, y=gm_y*self.gm_scale + self.gm_scale/2, batch = batch, group= group)
+        self.scale = self.gm_scale / 20
         self.on_create = EventHook()
         self.on_destroy = EventHook()
         self.deque_move()
@@ -86,13 +86,13 @@ class Ants(pyglet.sprite.Sprite):
                 self.y += math.sin(rad) * SQRT_2
 
         else:
-            print(self.x, self.y)
             self.x = self.x_dest
             self.y = self.y_dest
-            print(self.x, self.y)
             self.gm_x = self.gm_x_next
             self.gm_y = self.gm_y_next
 
+            tile_idx = self.gm_y * self.game_map.count_x + self.gm_x
+            self.game_map.tile_list[tile_idx].new_track(2)
             self.q_state.rotate(-1)
 
     def destroy(self):                     

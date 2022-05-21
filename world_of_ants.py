@@ -9,19 +9,20 @@ from backdrop import *
 
 class Game_Window(Window):
     def __init__(self):
-        super(Game_Window,self).__init__(1024,768, "Симулятор муравейника")
+        super(Game_Window,self).__init__(1366,768, "Симулятор муравейника")
         self.opengl_init()
         self.batch_01 = pyglet.graphics.Batch()
         self.layer_00 = pyglet.graphics.OrderedGroup(0)
         self.layer_01 = pyglet.graphics.OrderedGroup(1)
         self.layer_02 = pyglet.graphics.OrderedGroup(2)
         self.alive = 1
-        self.game_map = Game_Map(20, batch=self.batch_01, group=self.layer_01)
-        self.game_map.fill()
         self.gm_scale = 20
+        self.game_map = Game_Map(self.gm_scale, batch=self.batch_01, group=self.layer_01)
+        self.game_map.fill()
+        
 
     def opengl_init(self):
-        glClearColor(0.0/255.0, 128.0/255.0, 0.0/255.0, 1) # цвет окна
+        glClearColor(255.0/255.0, 255.0/255.0, 255.0/255.0, 1) # цвет окна
         glEnable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
         glDepthFunc(GL_LEQUAL)
@@ -41,7 +42,7 @@ class Game_Window(Window):
             event = self.dispatch_events() # опрашиваем события 
     
     def create_ant(self):
-        new_ant = Ants(gm_x=10, gm_y=10, gm_scale=self.gm_scale, batch= self.batch_01, group=self.layer_02, game_map=self.game_map)
+        new_ant = Ants(gm_x=10, gm_y=10, batch=self.batch_01, group=self.layer_02, game_map=self.game_map)
         new_ant.create()
 
     def on_key_press(self, symbol, modifiers):

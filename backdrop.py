@@ -6,9 +6,9 @@
 from pyglet import shapes
 
 class Game_Map():
-    def __init__(self, scale:int, batch=None, group=None):
-        self.count_x = 50
-        self.count_y = 50
+    def __init__(self, scale:int=20, batch=None, group=None):
+        self.count_x = 70
+        self.count_y = 40
         self.map_list = []
         self.tile_list = []
         self.scale = scale
@@ -34,16 +34,31 @@ class Game_Map():
         for i in range(len(self.map_list)):
             for j in range(len(self.map_list[i])):
                 if self.map_list[i][j] == 1:
-                    fb = Tile(x=j * self.scale, y=i * self.scale, scale=self.scale, batch=self.batch, group=self.group)
-                    self.tile_list.append(fb)
+                    tl = Tile(x=j * self.scale, y=i * self.scale, scale=self.scale, batch=self.batch, group=self.group, track_type=1)
+                else:
+                    tl = Tile(x=j * self.scale, y=i * self.scale, scale=self.scale, batch=self.batch, group=self.group, track_type=0)
+                
+                self.tile_list.append(tl)
 
 class Tile(shapes.Rectangle):
+
+    track_list = [
+    {4: (255, 255, 255)}, # empty tile
+    {4: (0, 0, 0)}, # wall
+    {0: (255, 255, 255), 1: (200, 255, 200), 2: (120, 255, 120), 3: (60, 255, 60), 4: (0, 255, 0)} # ant track tile
+    ]
+
     def __init__(self, x:int, y:int, scale:int, track_type:int, batch=None, group=None):
         super().__init__(x=x, y=y, width=scale, height=scale, color=(0, 0, 0), batch=batch, group=group)
+        self.new_track(track_type)
+
+    def new_track(self, track_type: int):
         self.track_type = track_type
         self.track_power = 4
+        self.color = self.track_list[self.track_type][self.track_power]     
+    
+
 
 
 if __name__ == '__main__':
-    obj = Game_Map(5)
-    obj.new_file(0)
+    Game_Map().new_file(0)
