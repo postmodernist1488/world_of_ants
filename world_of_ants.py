@@ -19,7 +19,8 @@ class Game_Window(Window):
         self.gm_scale = 10
         self.game_map = Game_Map(self.gm_scale, batch=self.batch_01, group=self.layer_01)
         self.game_map.fill()
-        
+        self.x_offset = 0
+        self.y_offset = 0
 
     def opengl_init(self):
         glClearColor(255.0/255.0, 255.0/255.0, 255.0/255.0, 1) # цвет окна
@@ -41,17 +42,25 @@ class Game_Window(Window):
             dt = clock.tick() # тикаем часиками
             event = self.dispatch_events() # опрашиваем события 
     
-    def create_ant(self):
-        new_ant = Ants(gm_x=10, gm_y=10, batch=self.batch_01, group=self.layer_02, game_map=self.game_map)
+    def create_ant(self, x, y):
+        new_ant = Ants(gm_x= int(x // self.gm_scale), gm_y=int(y // self.gm_scale), batch=self.batch_01, group=self.layer_02, game_map=self.game_map)
         new_ant.create()
 
     def on_key_press(self, symbol, modifiers):
         if symbol == key.LCTRL:
-            self.create_ant()
+            self.create_ant(100, 100)
+
+    def on_mouse_press(self, x, y, button, modifiers):
+        if button == pyglet.window.mouse.LEFT:
+            
+            self.create_ant(x - self.x_offset, y - self.y_offset)
+
 
     def on_mouse_drag(self, x, y, dx, dy, buttons, modifiers):
-        if buttons == pyglet.window.mouse.LEFT:
+        if buttons == pyglet.window.mouse.MIDDLE:
             glTranslatef(-dx, -dy, 0)
+            self.x_offset -= dx
+            self.y_offset -= dy
 
 
 
